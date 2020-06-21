@@ -1,10 +1,13 @@
-import pygame, tile
+import pygame, tile, time
 from win_check import winCheck
 pygame.init()
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 145, 0)
+BLUE = (0, 0, 255)
+
+FONT = pygame.font.Font("Fonts/font.ttf", 100)
 
 SCREENWIDTH = 750
 SCREENHEIGHT = 750
@@ -14,6 +17,7 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Noughts and Crosses")
 
 carryOn = True
+won = False
 playing = "nought"
 move = 1
 clock = pygame.time.Clock()
@@ -42,23 +46,32 @@ while carryOn:
                         move += 1
                         if move >= 5:
                             if winCheck(tiles.sprites(), tile.index):
-                                print("WIN")
-                        if move == 10:
-                            print("DRAW")
+                                if move % 2 == 1:
+                                    winMessage = FONT.render("Crosses Wins!", True, BLUE, None)
+                                else:
+                                    winMessage = FONT.render("Noughts Wins!", True, BLUE, None)
+                                won = True
+                            elif move == 10:
+                                winMessage = FONT.render("DRAW!", True, BLUE, None)
+                                won = True
 
     #Game Logic
     tiles.update()
 
     ## Drawing Code ##
-    # Background
-    screen.fill(GREEN)
-    pygame.draw.line(screen, WHITE, (SCREENWIDTH / 3, 0), (SCREENWIDTH / 3, SCREENHEIGHT), 5)
-    pygame.draw.line(screen, WHITE, (SCREENWIDTH * 2/3, 0), (SCREENWIDTH * 2/3, SCREENHEIGHT), 5)
-    pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT / 3), (SCREENWIDTH, SCREENHEIGHT / 3), 5)
-    pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT * 2/3), (SCREENWIDTH, SCREENHEIGHT * 2/3), 5)
+    if not won:
+        # Background
+        screen.fill(GREEN)
+        pygame.draw.line(screen, WHITE, (SCREENWIDTH / 3, 0), (SCREENWIDTH / 3, SCREENHEIGHT), 5)
+        pygame.draw.line(screen, WHITE, (SCREENWIDTH * 2/3, 0), (SCREENWIDTH * 2/3, SCREENHEIGHT), 5)
+        pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT / 3), (SCREENWIDTH, SCREENHEIGHT / 3), 5)
+        pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT * 2/3), (SCREENWIDTH, SCREENHEIGHT * 2/3), 5)
 
-    # Tiles
-    tiles.draw(screen)
+        # Tiles
+        tiles.draw(screen)
+    else:
+        screen.fill(GREEN)
+        screen.blit(winMessage, (SCREENWIDTH/5, SCREENHEIGHT/3, 0, 0))
 
     pygame.display.flip()
     clock.tick(60)
