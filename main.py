@@ -1,29 +1,28 @@
-import pygame
-from tile import Tile
+import pygame, tile
+from win_check import winCheck
 pygame.init()
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 145, 0)
 
-SCREENWIDTH = 900
-SCREENHEIGHT = 900
+SCREENWIDTH = 750
+SCREENHEIGHT = 750
 size = (SCREENWIDTH, SCREENHEIGHT)
 
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Noughts and Crosses")
 
 carryOn = True
+playing = "nought"
+move = 1
 clock = pygame.time.Clock()
 
+NOUGHT, CROSS = tile.createPieces(SCREENWIDTH, SCREENHEIGHT)
 tiles = pygame.sprite.Group()
 for i in range(3):
     for j in range(3):
-        tiles.add(Tile((i*3)+j, SCREENWIDTH/3, SCREENHEIGHT/3))
-
-tiles.sprites()[2].changeValue("NOUGHT")
-tiles.sprites()[5].changeValue("CROSS")
-tiles.sprites()[1].changeValue("CROSS")
+        tiles.add(tile.Tile((i*3)+j, SCREENWIDTH, SCREENHEIGHT, NOUGHT, CROSS))
 
 while carryOn:
     for event in pygame.event.get():
@@ -33,7 +32,19 @@ while carryOn:
             mousex, mousey = pygame.mouse.get_pos()
             for tile in tiles:
                 if tile.isClicked(mousex, mousey):
-                    print(tile.index)
+                    if not tile.played:
+                        if playing == "nought":
+                            tile.changeValue("NOUGHT")
+                            playing = "cross"
+                        else:
+                            tile.changeValue("CROSS")
+                            playing = "nought"
+                        move += 1
+                        if move >= 5:
+                            if winCheck(tiles.sprites(), tile.index):
+                                print("WIN")
+                        if move == 10:
+                            print("DRAW")
 
     #Game Logic
     tiles.update()
@@ -46,9 +57,7 @@ while carryOn:
     pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT / 3), (SCREENWIDTH, SCREENHEIGHT / 3), 5)
     pygame.draw.line(screen, WHITE, (0, SCREENHEIGHT * 2/3), (SCREENWIDTH, SCREENHEIGHT * 2/3), 5)
 
-    #for t in tiles:
-    #    pygame.draw.rect(screen, (0,0,0), (t.rect.x, t.rect.y, SCREENWIDTH/3, SCREENHEIGHT/3))
-
+    # Tiles
     tiles.draw(screen)
 
     pygame.display.flip()
