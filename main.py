@@ -70,7 +70,6 @@ while carryOn:
         # Tiles
         tiles.draw(screen)
     else:
-        screen.fill(GREEN)
         screen.blit(winMessage, (SCREENWIDTH/5, SCREENHEIGHT/3, 0, 0))
 
     pygame.display.flip()
