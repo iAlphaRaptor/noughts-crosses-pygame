@@ -63,7 +63,6 @@ while carryOn:
                                     winMessage = FONT.render("DRAW!", True, BLUE, None)
                                     gameState = "ask"
         if event.type == pygame.KEYDOWN:
-            print(gameState)
             if gameState == "ask":
                 for box in boxes:
                     if box.active:
