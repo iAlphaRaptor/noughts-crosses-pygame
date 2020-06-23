@@ -17,8 +17,7 @@ class InputBox(pygame.sprite.Sprite):
             if self.boxColour[i] < 100:
                 temp.append(self.boxColour[i] + 30)
             else:
-                temp.append(self.boxColour[i] - random.randint(25, 100))
-        print(temp)
+                temp.append(self.boxColour[i] - 20)
         self.activeColour = (temp[0], temp[1], temp[2])
 
         self.questionText = text
